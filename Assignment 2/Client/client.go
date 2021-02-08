@@ -17,22 +17,36 @@ func logFatal(err error) {
 
 func main() {
 
-	connection, err := net.Dial("tcp", "localhost:9000")
+	connection, err := net.Dial("tcp", "localhost:8080")
 	logFatal(err)
 
 	defer connection.Close()
 
-	fmt.Println("Enter your name:")
+	fmt.Printf("Enter your username:")
 	reader := bufio.NewReader(os.Stdin)
 	username, err := reader.ReadString('\n')
 	logFatal(err)
 
 	username = strings.Trim(username, "\r\n")
-	welcomeMSg := fmt.Sprintf("Welcome %s ! write Below to send Messages :-.", username)
+	welcomeMSg := fmt.Sprintf("Hello, %s ! Type below to send Messages :-.", username)
 	fmt.Println(welcomeMSg)
 
+	go Read(connection)
 	Write(connection, username)
 
+}
+
+func Read(connection net.Conn) {
+	for {
+		reader := bufio.NewReader(connection)
+		message, err := reader.ReadString('\n')
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		fmt.Println(message)
+
+	}
 }
 
 func Write(connection net.Conn, username string) {
@@ -43,7 +57,7 @@ func Write(connection net.Conn, username string) {
 			break
 		}
 
-		message = fmt.Sprintf("%s:- %s\n", username, strings.Trim(message, "\r\n"))
+		message = fmt.Sprintf("%s:-%s\n", username, strings.Trim(message, "\r\n"))
 		connection.Write([]byte(message))
 
 	}
