@@ -6,4 +6,4 @@ The TCP Server accepts incoming messages from a TCP client and responds with the
 
 # Concurrent TCP Server:
 
-A TCP Server that accepts incoming messages from several TCP clients and responds with the number of clients currently connected to it.
+A TCP Server that accepts incoming messages from several TCP clients and responds with the number of clients currently connected to it
